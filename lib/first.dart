@@ -34,7 +34,7 @@ class _FirstState extends State<First> {
                     controller: title,
                     textAlign: TextAlign.center,
                     decoration: const InputDecoration(
-                      hintText: ' Code ',
+                      hintText: ' dkjsflksfklsdh ',
                     ),
                   ),
                 ),
