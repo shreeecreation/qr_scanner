@@ -4,11 +4,11 @@ import 'dart:ui' as ui;
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 
 class First extends StatefulWidget {
+  const First({Key? key}) : super(key: key);
+
   @override
   _FirstState createState() => _FirstState();
 }
@@ -16,7 +16,7 @@ class First extends StatefulWidget {
 class _FirstState extends State<First> {
   TextEditingController title = TextEditingController();
   TextEditingController content = TextEditingController();
-  GlobalKey _screenShotKey = GlobalKey();
+  final GlobalKey _screenShotKey = GlobalKey();
   var code = '';
   File? file;
   @override
@@ -27,13 +27,13 @@ class _FirstState extends State<First> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(35),
+                padding: const EdgeInsets.all(35),
                 child: Container(
                   decoration: BoxDecoration(border: Border.all()),
                   child: TextFormField(
                     controller: title,
                     textAlign: TextAlign.center,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: ' Code ',
                     ),
                   ),
@@ -46,7 +46,7 @@ class _FirstState extends State<First> {
                     code = title.text;
                   });
                 },
-                child: Text(
+                child: const Text(
                   "Create",
                   style: TextStyle(
                     color: Colors.white,
@@ -55,20 +55,21 @@ class _FirstState extends State<First> {
                 ),
               ),
               code == ''
-                  ? Text('')
+                  ? const Text('')
                   : RepaintBoundary(
                       key: _screenShotKey,
                       child: BarcodeWidget(
                         barcode: Barcode.qrCode(
                           errorCorrectLevel: BarcodeQRCorrectionLevel.high,
                         ),
-                        data: '$code',
+                        data: code,
                         width: 200,
                         height: 200,
                       ),
                     ),
-              ElevatedButton(onPressed: takeScreenshot, child: Text("jadu")),
-              ElevatedButton(onPressed: save, child: Text("jadu"))
+              ElevatedButton(
+                  onPressed: takeScreenshot, child: const Text("jadu")),
+              ElevatedButton(onPressed: save, child: const Text("jadu"))
             ],
           ),
         ),
@@ -90,10 +91,9 @@ class _FirstState extends State<First> {
 
   void save() async {
     takeScreenshot().then((value) async {
-      bool? saved = await GallerySaver.saveImage(value.path);
-      print(saved);
+      // bool? saved = await GallerySaver.saveImage(value.path);
     }).catchError((onError) {
-      print("error");
+      throw (onError);
     });
   }
 }

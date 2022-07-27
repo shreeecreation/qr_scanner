@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:qrcode/Home/home.dart';
 
 import 'first.dart';
 import 'second.dart';
@@ -19,12 +18,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Home(),
+      home: const Home(),
     );
   }
 }
 
 class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -53,11 +54,11 @@ class _HomeState extends State<Home> {
               ),
             ],
           ),
-          title: Text(
+          title: const Text(
             '  QR / Barcode Scanner',
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
             First(),
             ScanScreen(),
