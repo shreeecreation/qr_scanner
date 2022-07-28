@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:qrcode/Home/Bloc/bloc/home_bloc.dart';
+import 'package:qrcode/QrPage/_defaultqrpage.dart';
 
+import 'Home/home.dart';
 import 'first.dart';
 import 'second.dart';
 
@@ -13,12 +17,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(create: (context) => HomeBloc()),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: DefaultQr(),
       ),
-      home: const Home(),
     );
   }
 }
