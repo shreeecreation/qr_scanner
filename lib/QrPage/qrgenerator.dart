@@ -1,7 +1,14 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:path_provider/path_provider.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+import 'package:qrcode/Utils/scaffoldmessenger.dart';
+import 'package:share_plus/share_plus.dart';
 import '../Home/Bloc/bloc/home_bloc.dart';
 
 class QrGenerator extends StatefulWidget {
@@ -13,7 +20,7 @@ class QrGenerator extends StatefulWidget {
 
 class _QrGeneratorState extends State<QrGenerator> {
   TextEditingController title = TextEditingController();
-
+  var savepath;
   TextEditingController content = TextEditingController();
 
   final GlobalKey _screenShotKey = GlobalKey();
@@ -30,16 +37,25 @@ class _QrGeneratorState extends State<QrGenerator> {
           child: Column(
             children: [
               show_generate_qr
-                  ? BarcodeWidget(
-                      barcode: Barcode.qrCode(
-                        errorCorrectLevel: BarcodeQRCorrectionLevel.high,
+                  ? Container(
+                      color: Colors.white,
+                      child: RepaintBoundary(
+                        key: _screenShotKey,
+                        child: Container(
+                          color: Colors.white,
+                          child: BarcodeWidget(
+                            barcode: Barcode.qrCode(
+                              errorCorrectLevel: BarcodeQRCorrectionLevel.high,
+                            ),
+                            data: code,
+                            width: 200,
+                            height: 200,
+                          ),
+                        ),
                       ),
-                      data: code,
-                      width: 200,
-                      height: 200,
                     )
-                  : Image.network(
-                      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png",
+                  : Image.asset(
+                      "assets/qr.png",
                       height: 250,
                       width: 250,
                     ),
@@ -69,6 +85,7 @@ class _QrGeneratorState extends State<QrGenerator> {
                     code = title.text;
                     setState(() {
                       show_generate_qr = true;
+                      FocusScope.of(context).unfocus();
                     });
                   },
                   child: const Text(
@@ -80,7 +97,7 @@ class _QrGeneratorState extends State<QrGenerator> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -88,16 +105,65 @@ class _QrGeneratorState extends State<QrGenerator> {
                       onPressed: () {
                         BlocProvider.of<HomeBloc>(context)
                             .add(HomeInitialEvent());
+                        FocusScope.of(context).unfocus();
                       },
-                      child: const Text("Back")),
-                  SizedBox(width: 20),
-                  ElevatedButton(onPressed: null, child: const Text("Download"))
+                      child: const Text("    Back    ")),
+                  const SizedBox(width: 60),
+                  ElevatedButton(
+                      onPressed: () {
+                        save(context);
+                        FocusScope.of(context).unfocus();
+                      },
+                      child: const Text("Download"))
                 ],
               ),
+              const SizedBox(width: 20, height: 20),
+              ElevatedButton(
+                  onPressed: () {
+                    share(context);
+                    FocusScope.of(context).unfocus();
+                  },
+                  child: const Text("Share In App"))
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<File?> takeScreenshot() async {
+    try {
+      RenderRepaintBoundary boundary = _screenShotKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
+      ui.Image image = await boundary.toImage();
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+      final tempPath = (await getApplicationDocumentsDirectory()).path;
+      final path = tempPath + "qr.png";
+      savepath = path;
+      File imgFile = File(path);
+      return imgFile.writeAsBytes(pngBytes);
+    } catch (e) {
+      print("dasdas");
+    }
+  }
+
+  void save(BuildContext context) async {
+    takeScreenshot().then((value) async {
+      bool? saved = await GallerySaver.saveImage(value!.path);
+      ShowScaffold(context, "Downloaded to Gallery");
+    }).catchError((onError) {
+      ShowScaffold(context, "Error Saving to Gallery");
+    });
+  }
+
+  void share(BuildContext context) async {
+    takeScreenshot().then((value) async {
+      bool? saved = await GallerySaver.saveImage(value!.path);
+      Share.shareFiles([savepath], text: "");
+    }).catchError((onError) {
+      ShowScaffold(context, "Error Saving to Gall1ery and Sharing");
+    });
   }
 }

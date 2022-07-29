@@ -32,11 +32,14 @@ dependencies:
   equatable: ^2.0.3
   flutter_bloc: ^8.0.1
   barcode_widget: ^2.0.0
-  qr_flutter: ^4.0.0
   flutter_barcode_scanner: ^2.0.0
   path_provider: ^2.0.11
   gallery_saver: ^2.3.2
   marquee: ^2.2.1
+  animated_splash_screen: ^1.3.0
+  page_transition: ^2.0.9
+  url_launcher: ^6.1.5
+  share_plus: ^4.0.10
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -46,7 +49,11 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  flutter_launcher_icons: ^0.9.3
+flutter_icons:
+  image_path: "assets/logo.png"
+  android: true
+  ios: true
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -66,8 +73,10 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/qr.png
+    - assets/logo.png
+    - assets/footer.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

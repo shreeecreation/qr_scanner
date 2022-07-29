@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import '../Utils/scaffoldmessenger.dart';
 
 class Result extends StatelessWidget {
   const Result({Key? key, required this.result}) : super(key: key);
@@ -7,13 +10,17 @@ class Result extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white38,
       height: MediaQuery.of(context).size.height / 2,
+      decoration: BoxDecoration(
+          color: Colors.white38,
+          borderRadius: BorderRadius.all(Radius.circular(30))),
       child: Column(children: [
         Container(
+            decoration: BoxDecoration(
+                color: Colors.cyan,
+                borderRadius: BorderRadius.all(Radius.circular(5))),
             height: 50,
             width: MediaQuery.of(context).size.width,
-            color: Colors.cyan,
             child: const Center(
               child: Text("Result",
                   textAlign: TextAlign.center,
@@ -23,17 +30,31 @@ class Result extends StatelessWidget {
         Container(
             height: 300,
             width: 250,
-            color: Color.fromARGB(97, 253, 232, 232),
+            color: const Color.fromARGB(97, 253, 232, 232),
             child: Card(
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8))),
                 color: Colors.white54,
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(result,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.green,
-                        )),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(result,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.green,
+                            )),
+                        const SizedBox(height: 10),
+                        ElevatedButton(
+                            onPressed: () {
+                              Clipboard.setData(ClipboardData(text: result));
+                              ShowScaffold(context, "Copied to Clipboard");
+                            },
+                            child: const Text("Copy"))
+                      ],
+                    ),
                   ),
                 ))),
       ]),
