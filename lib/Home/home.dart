@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:marquee/marquee.dart';
-
-import '../QrPage/_defaultqrpage.dart';
 import 'Bloc/bloc/home_bloc.dart';
 
 class MyHomePage extends StatelessWidget {
@@ -13,7 +11,6 @@ class MyHomePage extends StatelessWidget {
     return BlocProvider(
       create: (context) => HomeBloc(),
       child: Scaffold(
-        // appBar: _appBar(),
         body: _bodyview(context),
       ),
     );
@@ -31,7 +28,7 @@ Column _bodyview(BuildContext context) {
               child: mark()),
         ],
       ),
-      SizedBox(height: 50),
+      const SizedBox(height: 50),
       _bodyImage(),
       const SizedBox(height: 50),
       Center(
@@ -54,7 +51,9 @@ Column _bodyview(BuildContext context) {
                   BlocProvider.of<HomeBloc>(context).add(HomeQrScanEvent()),
                 },
             "Scan a Qr Code"),
-      )
+      ),
+      const SizedBox(height: 20),
+      Image.asset("assets/footer.png", height: 200, width: 200),
     ],
   );
 }
@@ -62,17 +61,12 @@ Column _bodyview(BuildContext context) {
 ClipRRect _bodyImage() {
   return ClipRRect(
     borderRadius: BorderRadius.circular(12.0),
-    child: Image.network(
-      "https://img.freepik.com/free-vector/qr-code-scan-mobile-style_23-2148638220.jpg?w=2000",
+    child: Image.asset(
+      "assets/logo.png",
       height: 250.0,
       width: 250.0,
     ),
   );
-  // return Image.network(
-  //   "https://img.freepik.com/free-vector/qr-code-scan-mobile-style_23-2148638220.jpg?w=2000",
-  //   height: 250,
-  //   width: 250,
-  // );
 }
 
 OutlinedButton _twobutton(final Function()? onpressed, final String text) {
@@ -80,7 +74,7 @@ OutlinedButton _twobutton(final Function()? onpressed, final String text) {
       onPressed: onpressed,
       child: Text(
         text,
-        style: TextStyle(color: Colors.black, fontSize: 17),
+        style: const TextStyle(color: Colors.black, fontSize: 17),
       ),
       style: OutlinedButton.styleFrom(
         primary: Colors.white,
@@ -91,5 +85,5 @@ OutlinedButton _twobutton(final Function()? onpressed, final String text) {
 Marquee mark() {
   return Marquee(
       text: 'SCAN AND CREATE A QR CODE IN A SECOND             ',
-      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold));
+      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold));
 }
